@@ -55,8 +55,24 @@ class MainForm extends Component {
   };
 
   handleChange = (event) => {
-    this.setState({ account: { ...this.state.account, [event.target.name]: event.target.value } });
+    const { name, value } = event.target;
+    this.setState({ account: { ...this.state.account, [name]: value } });
+
+    this.validateProperty(name, value);
   };
+
+  validateProperty(name, value) {
+    console.log(name, value);
+    const obj = { [name]: value };
+    const schema = { [name]: this.schema[name] };
+    const result = Joi.validate(obj, schema);
+    if (result.error) {
+      console.log(result.error.details[0].message);
+      this.setState({ errors: { ...this.state.errors, [name]: result.error.details[0].message } });
+    } else {
+      this.setState({ errors: { ...this.state.errors, [name]: '' } });
+    }
+  }
 
   handleCheck = (event) => {
     console.log(event.target.checked);
