@@ -28,7 +28,7 @@ input {
   font-size: 1em;
 }
 
-#checkbox {
+#agreement {
   display: inline;
   width: 5%;
   margin: 10px;
@@ -47,4 +47,14 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.is-invalid {
+  border-color: tomato;
+}
+
+.error-message {
+  color: tomato;
+  font-size: 0.8em;
+  margin-top: -0.5em;
 }
