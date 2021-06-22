@@ -11,15 +11,19 @@ class MainForm extends Component {
       agreement: '',
     },
     errors: {},
+    errorMessages: {
+      agreement: 'Please agree with our terms',
+      reapeatPassword: 'Passwords must match',
+    },
   };
 
   // validacijos schema
   schema = {
-    username: Joi.string().min(3).required(),
+    username: Joi.string().min(3).required().label('Username'),
     email: Joi.string().email({ minDomainSegments: 2 }).required(),
     password: Joi.string().min(4).required(),
     repeatPassword: Joi.ref('password'),
-    agreement: Joi.boolean().required(),
+    agreement: Joi.boolean().required().invalid(false).default(false),
   };
 
   validateForm() {
@@ -48,9 +52,15 @@ class MainForm extends Component {
     // }
   }
 
+  resetErrors() {
+    this.setState({ errors: {} });
+    // jei agreement yra false tai => ""
+    this.state.account.agreement === false && this.setState({ account: { ...this.state.account, agreemnet: '' } });
+  }
+
   handleSubmit = (event) => {
     event.preventDefault();
-    this.setState({ errors: '' });
+    this.resetErrors();
     this.validateForm();
   };
 
@@ -80,7 +90,7 @@ class MainForm extends Component {
   };
 
   render() {
-    const { account, errors } = this.state;
+    const { account, errors, errorMessages } = this.state;
 
     return (
       <div className="main-form">
@@ -122,7 +132,7 @@ class MainForm extends Component {
             name="repeatPassword"
             placeholder="Repeat password"
           />
-          {errors.reapeatPassword && <p className="error-message">{errors.reapeatPassword}</p>}
+          {errors.reapeatPassword && <p className="error-message">{errorMessages.reapeatPassword}</p>}
           <div>
             <label htmlFor="agreement">I agree</label>
             <input
@@ -133,7 +143,7 @@ class MainForm extends Component {
               name="agreement"
               type="checkbox"
             ></input>
-            {errors.agreement && <p className="error-message">{errors.agreement}</p>}
+            {errors.agreement && <p className="error-message">{errorMessages.agreement}</p>}
             <button type="submit">Send</button>
           </div>
         </form>
