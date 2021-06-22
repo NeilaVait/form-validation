@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Joi from 'joi-browser';
+import ValidationResults from './validationResults';
 
 class MainForm extends Component {
   state = {
@@ -80,7 +81,10 @@ class MainForm extends Component {
       console.log(result.error.details[0].message);
       this.setState({ errors: { ...this.state.errors, [name]: result.error.details[0].message } });
     } else {
-      this.setState({ errors: { ...this.state.errors, [name]: '' } });
+      const errorsCopy = { ...this.state.errors };
+      delete errorsCopy[name];
+
+      this.setState({ errors: errorsCopy });
     }
   }
 
@@ -89,64 +93,73 @@ class MainForm extends Component {
     this.setState({ account: { ...this.state.account, agreement: event.target.checked } });
   };
 
+  passProps() {
+    if (this.state.errors.password && true);
+    if (this.state.errors.reapeatPassword && true);
+    return false;
+  }
+
   render() {
     const { account, errors, errorMessages } = this.state;
 
     return (
       <div className="main-form">
         <h1>Main form</h1>
-        <form onSubmit={this.handleSubmit} autoComplete="off">
-          <input
-            className={'input ' + (errors.username && 'is-invalid')}
-            onChange={this.handleChange}
-            value={account.username}
-            type="text"
-            name="username"
-            placeholder="Username"
-          />
-          {errors.username && <p className="error-message">{errors.username}</p>}
-
-          <input
-            className={'input ' + (errors.email && 'is-invalid')}
-            onChange={this.handleChange}
-            value={account.email}
-            type="text"
-            name="email"
-            placeholder="Email"
-          />
-          {errors.email && <p className="error-message">{errors.email}</p>}
-          <input
-            className={'input ' + (errors.password && 'is-invalid')}
-            onChange={this.handleChange}
-            value={account.password}
-            type="text"
-            name="password"
-            placeholder="Password"
-          />
-          {errors.password && <p className="error-message">{errors.password}</p>}
-          <input
-            className={'input ' + (errors.reapeatPassword && 'is-invalid')}
-            onChange={this.handleChange}
-            value={account.reapeatPassword}
-            type="text"
-            name="repeatPassword"
-            placeholder="Repeat password"
-          />
-          {errors.reapeatPassword && <p className="error-message">{errorMessages.reapeatPassword}</p>}
-          <div>
-            <label htmlFor="agreement">I agree</label>
+        <div className="flex">
+          <form onSubmit={this.handleSubmit} autoComplete="off">
             <input
-              className={'input ' + (errors.agreement && 'is-invalid')}
-              onChange={this.handleCheck}
-              value={account.agreement}
-              id="agreement"
-              name="agreement"
-              type="checkbox"
-            ></input>
-            {errors.agreement && <p className="error-message">{errorMessages.agreement}</p>}
-            <button type="submit">Send</button>
-          </div>
-        </form>
+              className={'input ' + (errors.username && 'is-invalid')}
+              onChange={this.handleChange}
+              value={account.username}
+              type="text"
+              name="username"
+              placeholder="Username"
+            />
+            {errors.username && <p className="error-message">{errors.username}</p>}
+
+            <input
+              className={'input ' + (errors.email && 'is-invalid')}
+              onChange={this.handleChange}
+              value={account.email}
+              type="text"
+              name="email"
+              placeholder="Email"
+            />
+            {errors.email && <p className="error-message">{errors.email}</p>}
+            <input
+              className={'input ' + (errors.password && 'is-invalid')}
+              onChange={this.handleChange}
+              value={account.password}
+              type="text"
+              name="password"
+              placeholder="Password"
+            />
+            {errors.password && <p className="error-message">{errors.password}</p>}
+            <input
+              className={'input ' + (errors.reapeatPassword && 'is-invalid')}
+              onChange={this.handleChange}
+              value={account.reapeatPassword}
+              type="text"
+              name="repeatPassword"
+              placeholder="Repeat password"
+            />
+            {errors.reapeatPassword && <p className="error-message">{errorMessages.reapeatPassword}</p>}
+            <div>
+              <label htmlFor="agreement">I agree</label>
+              <input
+                className={'input ' + (errors.agreement && 'is-invalid')}
+                onChange={this.handleCheck}
+                value={account.agreement}
+                id="agreement"
+                name="agreement"
+                type="checkbox"
+              ></input>
+              {errors.agreement && <p className="error-message">{errorMessages.agreement}</p>}
+              <button type="submit">Send</button>
+            </div>
+          </form>
+          <ValidationResults passErr={this.passProps()} />
+        </div>
       </div>
     );
   }
