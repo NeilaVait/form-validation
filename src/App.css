@@ -10,5 +10,41 @@
   color: #333;
 }
 
-.main-from h1 {
+form {
+  padding: 1em;
+  width: 50%;
+  border: 1px solid black;
+  border-radius: 15px;
+  margin-top: 50px;
+}
+
+input {
+  display: block;
+  line-height: 2em;
+  margin: 10px 0;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid black;
+  font-size: 1em;
+}
+
+#checkbox {
+  display: inline;
+  width: 5%;
+  margin: 10px;
+}
+
+input:focus {
+  outline: none;
+}
+
+button {
+  font-size: medium;
+  float: right;
+  background-color: rgb(68, 145, 68);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
