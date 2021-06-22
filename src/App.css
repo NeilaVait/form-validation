@@ -18,7 +18,7 @@ form {
   margin-top: 50px;
 }
 
-input {
+.input {
   display: block;
   line-height: 2em;
   margin: 10px 0;
@@ -40,7 +40,7 @@ input:focus {
 
 button {
   font-size: medium;
-  float: right;
+  margin-top: 20px;
   background-color: rgb(68, 145, 68);
   color: white;
   padding: 10px;

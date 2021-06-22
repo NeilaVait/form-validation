@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Joi from 'joi-browser';
 
 class MainForm extends Component {
   state = {
@@ -6,20 +7,45 @@ class MainForm extends Component {
       username: '',
       email: '',
       password: '',
-      reapeatPassword: '',
+      repeatPassword: '',
       agreement: '',
     },
     errors: {},
   };
 
+  // validacijos schema
+  schema = {
+    username: Joi.string().min(3).required(),
+    email: Joi.string().email({ minDomainSegments: 2 }).required(),
+    password: Joi.string().min(4).required(),
+    repeatPassword: Joi.ref('password'),
+    agreement: Joi.boolean().required(),
+  };
+
   validateForm() {
-    if (this.state.account.username.length === 0) {
-      this.setState({ errors: { username: 'Cannot be blank' } });
-      return;
+    const result = Joi.validate(this.state.account, this.schema, { abortEarly: false });
+    console.log(result);
+
+    if (!result.error) return;
+
+    const errors = {};
+    // errors.username = result.error.details
+
+    for (let item of result.error.details) {
+      errors[item.path[0]] = item.message;
     }
-    if (this.state.account.username.length <= 3) {
-      this.setState({ errors: { username: 'Username should be at least 4 letters' } });
-    }
+
+    console.log(' localerrors', errors);
+
+    this.setState({ errors });
+
+    // if (this.state.account.username.length === 0) {
+    //   this.setState({ errors: { username: 'Cannot be blank' } });
+    //   return;
+    // }
+    // if (this.state.account.username.length <= 3) {
+    //   this.setState({ errors: { username: 'Username should be at least 4 letters' } });
+    // }
   }
 
   handleSubmit = (event) => {
@@ -54,30 +80,44 @@ class MainForm extends Component {
           />
           {errors.username && <p className="error-message">{errors.username}</p>}
 
-          <input onChange={this.handleChange} value={account.email} type="text" name="email" placeholder="Email" />
           <input
+            className={'input ' + (errors.email && 'is-invalid')}
+            onChange={this.handleChange}
+            value={account.email}
+            type="text"
+            name="email"
+            placeholder="Email"
+          />
+          {errors.email && <p className="error-message">{errors.email}</p>}
+          <input
+            className={'input ' + (errors.password && 'is-invalid')}
             onChange={this.handleChange}
             value={account.password}
             type="text"
             name="password"
             placeholder="Password"
           />
+          {errors.password && <p className="error-message">{errors.password}</p>}
           <input
+            className={'input ' + (errors.reapeatPassword && 'is-invalid')}
             onChange={this.handleChange}
             value={account.reapeatPassword}
             type="text"
-            name="reapeatPassword"
+            name="repeatPassword"
             placeholder="Repeat password"
           />
+          {errors.reapeatPassword && <p className="error-message">{errors.reapeatPassword}</p>}
           <div>
             <label htmlFor="agreement">I agree</label>
             <input
+              className={'input ' + (errors.agreement && 'is-invalid')}
               onChange={this.handleCheck}
               value={account.agreement}
               id="agreement"
               name="agreement"
               type="checkbox"
             ></input>
+            {errors.agreement && <p className="error-message">{errors.agreement}</p>}
             <button type="submit">Send</button>
           </div>
         </form>
